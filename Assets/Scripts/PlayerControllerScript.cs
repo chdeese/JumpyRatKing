@@ -6,17 +6,18 @@ using UnityEngine;
 //rigidbody cannot be delted off an object with this script (it errors).
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerControllerScript : MonoBehaviour
-
-//Attributes are written like this:
-//[Attributes]
-
-//sets a range with a slider in the inspector.
-//[Range(min, max)]
-
-//hides variable in inspector
-//[HideInInspector]
-//public float publicValue;
 {
+
+    //Attributes are written like this:
+    //[Attributes]
+
+    //sets a range with a slider in the inspector.
+    //[Range(min, max)]
+
+    //hides variable in inspector
+    //[HideInInspector]
+    //public float publicValue;
+
     //shows private variable in inspector
     //[SerializeField]
 
@@ -28,19 +29,30 @@ public class PlayerControllerScript : MonoBehaviour
     //speed of movement.
     private float _acceleration = 50;
 
+    //compound attributes.
+    [SerializeField, Range(0, 10), Tooltip("Jump Speed")]
+    //speed of jumping.
+    private float _jumpHeight = 2;
+
+    [Space]
+    [SerializeField]
+    private Vector3 _groundCheck;
+    [SerializeField]
+    private Vector3 _groundCheckExtense;
+
+
     //the maximum speed that this can have.
     private float _maxSpeed = 100;
 
-    //compound attributes.
-    [SerializeField, Range(0, 100), Tooltip("Jump Speed")]
-    //speed of jumping.
-    private float _jumpForce = 20;
+    //stores if the target is currently grounded or not.
+    private bool _isTargetGrounded = false;
+
+    //stores if the player is jumping or not.
+    private bool _jumpInput;
 
     //stores the direction of movement on the x axis.
     private Vector3 _movement;
 
-    //stores if the target is currently grounded or not.
-    private bool _isTargetGrounded = false;
 
 
     //using properties allows you to controll how this works.
@@ -88,31 +100,32 @@ public class PlayerControllerScript : MonoBehaviour
         //get axis raw is getting -1 or 1 with no smoothing.
         _movement = new Vector3(Input.GetAxisRaw("Horizontal"), 0, 0);
         //get the raw jump input.
-        float jumpMovement = 0;
-        if (Input.GetKeyDown(KeyCode.Space) && _isTargetGrounded)
-        {
-            jumpMovement = 1;
-            _isTargetGrounded = false;
-        }
-
-        //magnifies jump and movement values.
-        float jumpMagnifier = 50;
-
-        //adds force required for jumping.
-        //ForceMode.Impulse applies the force all at once.
-        _rigidbody.AddForce(Vector3.up * jumpMovement * _jumpForce * jumpMagnifier * Time.deltaTime, ForceMode.Impulse);
+        _jumpInput = Input.GetAxisRaw("Jump") != 0;
     }
 
     private void FixedUpdate()
     {
+        //finds if the player is grounded or not.
+        _isTargetGrounded = Physics.OverlapBox(transform.position + _groundCheck, _groundCheckExtense, transform.rotation).Length > 1;
+
+        //magnifies the speed of player movement.
         float movementMagnifier = 70;
-        if (_isTargetGrounded)
-            //adds movement force.
-            _rigidbody.AddForce(_movement * _acceleration * movementMagnifier * Time.fixedDeltaTime, ForceMode.VelocityChange);
+
+        //adds movement force.
+        _rigidbody.AddForce(_movement * _acceleration * movementMagnifier * Time.fixedDeltaTime, ForceMode.VelocityChange);
+
+        //Clamp velocity to _maxSpeed.
+        Vector3 velocity = _rigidbody.velocity;
+        float newXspeed = Mathf.Clamp(_rigidbody.velocity.x, -_maxSpeed, _maxSpeed);
+        velocity.x = newXspeed;
+        _rigidbody.velocity = velocity;
 
         //clamp velocity to maxSpeed.
-        if (_rigidbody.velocity.magnitude > _maxSpeed)
-            _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
+        if (_jumpInput && _isTargetGrounded)
+        {
+            float force = Mathf.Sqrt(_jumpHeight * -2f * Physics.gravity.y);
+            _rigidbody.AddForce(Vector3.up * force, ForceMode.Impulse);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -120,5 +133,13 @@ public class PlayerControllerScript : MonoBehaviour
         _isTargetGrounded = true;
     }
 
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
+    {
+        //Draw ground check
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(transform.position + _groundCheck, _groundCheckExtense);
+    }
+#endif
 }
 
