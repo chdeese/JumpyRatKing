@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 //creates a new rigidbody if it doesnt exist on the object.
@@ -36,6 +37,9 @@ public class PlayerControllerScript : MonoBehaviour
     private bool _jumpInput;
     //stores the direction of movement on the x axis.
     private Vector3 _movement;
+
+    //stores the player's rotation.
+    private Vector3 _rotation;
 
 
 
@@ -123,6 +127,20 @@ public class PlayerControllerScript : MonoBehaviour
         //give our velocity back to the rigidbody.
         _rigidbody.velocity = velocity;
 
+        //if we are moving right
+        if (velocity.x > 0.1f)
+        {
+            //set our rotation to the right.
+            transform.rotation = Quaternion.Euler(0, 90, 0);
+        }
+        //else if we are moving left
+        else
+        {
+            //set our rotation to the left.
+            transform.rotation = Quaternion.Euler(0, -90, 0);
+        }
+
+
         //if jump is possible and we are trying to jump
         if (_jumpInput && _isTargetGrounded)
         {
@@ -133,6 +151,7 @@ public class PlayerControllerScript : MonoBehaviour
             _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
+
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
