@@ -7,8 +7,11 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerControllerScript : MonoBehaviour
 {
+    [SerializeField]
+    private bool _isPlayerOne;
+
     //SerializesField and sets a minimum value that can be set.
-    [SerializeField, Min(0)]
+    [SerializeField, Range(0, 10)]
     //adds a tool tip to the variable in the inspector.
     [Tooltip("Player Acceleration")]
     //speed of movement.
@@ -26,7 +29,7 @@ public class PlayerControllerScript : MonoBehaviour
 
 
     //the maximum speed that this can have.
-    private float _maxSpeed = 100;
+    private float _maxSpeed = 15;
     //stores if the target is currently grounded or not.
     private bool _isTargetGrounded = false;
     //stores if the player is jumping or not.
@@ -78,10 +81,20 @@ public class PlayerControllerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //get axis raw is getting -1 or 1 with no smoothing. <Looks for left and right inputs and returns the direction.>
-        _movement = new Vector3(Input.GetAxisRaw("Horizontal"), 0, 0);
-        //get the raw jump input.
-        _jumpInput = Input.GetAxisRaw("Jump") != 0;
+        if (_isPlayerOne)
+        {
+            //get axis raw is getting -1 or 1 with no smoothing. <Looks for left and right inputs and returns the direction.>
+            _movement = new Vector3(Input.GetAxisRaw("Player1Horizontal"), 0, 0);
+            //get the raw jump input.
+            _jumpInput = Input.GetAxisRaw("Player1Jump") != 0;
+        }
+        else
+        {
+            //get axis raw is getting -1 or 1 with no smoothing. <Looks for left and right inputs and returns the direction.>
+            _movement = new Vector3(Input.GetAxisRaw("Player2Horizontal"), 0, 0);
+            //get the raw jump input.
+            _jumpInput = Input.GetAxisRaw("Player2Jump") != 0;
+        }
     }
 
     private void FixedUpdate()
@@ -90,7 +103,10 @@ public class PlayerControllerScript : MonoBehaviour
         _isTargetGrounded = Physics.OverlapBox(transform.position + _groundCheck, _groundCheckExtense, transform.rotation).Length > 1;
 
         //magnifies the speed of player movement.
-        float movementMagnifier = 70;
+        float movementMagnifier = 10;
+
+        //magnifies the speed of player jump movement.
+        float jumpMagnifier = 0.2f;
 
         //adds movement force.
         _rigidbody.AddForce(_movement * _acceleration * movementMagnifier * Time.fixedDeltaTime, ForceMode.VelocityChange);
@@ -110,17 +126,19 @@ public class PlayerControllerScript : MonoBehaviour
         //if jump is possible and we are trying to jump
         if (_jumpInput && _isTargetGrounded)
         {
-            //find the force of the jump
-            float force = Mathf.Sqrt(_jumpHeight * -2f * Physics.gravity.y);
+            //find the force of the jump and magnify the jump height.
+            float jumpForce = Mathf.Sqrt(_jumpHeight * jumpMagnifier * -2f * Physics.gravity.y);
+
             //add the force to our rigidbody.
-            _rigidbody.AddForce(Vector3.up * force, ForceMode.Impulse);
+            _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
-        //Draw ground check
+        //selects the color of our gizmo.
         Gizmos.color = Color.green;
+        //draws a wire cube that indicates where our ground collision is.
         Gizmos.DrawWireCube(transform.position + _groundCheck, _groundCheckExtense);
     }
 #endif
