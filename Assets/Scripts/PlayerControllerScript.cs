@@ -7,21 +7,6 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerControllerScript : MonoBehaviour
 {
-
-    //Attributes are written like this:
-    //[Attributes]
-
-    //sets a range with a slider in the inspector.
-    //[Range(min, max)]
-
-    //hides variable in inspector
-    //[HideInInspector]
-    //public float publicValue;
-
-    //shows private variable in inspector
-    //[SerializeField]
-
-    //Attributes can be stacked in the same square brackets.
     //SerializesField and sets a minimum value that can be set.
     [SerializeField, Min(0)]
     //adds a tool tip to the variable in the inspector.
@@ -29,7 +14,6 @@ public class PlayerControllerScript : MonoBehaviour
     //speed of movement.
     private float _acceleration = 50;
 
-    //compound attributes.
     [SerializeField, Range(0, 10), Tooltip("Jump Speed")]
     //speed of jumping.
     private float _jumpHeight = 2;
@@ -43,13 +27,10 @@ public class PlayerControllerScript : MonoBehaviour
 
     //the maximum speed that this can have.
     private float _maxSpeed = 100;
-
     //stores if the target is currently grounded or not.
     private bool _isTargetGrounded = false;
-
     //stores if the player is jumping or not.
     private bool _jumpInput;
-
     //stores the direction of movement on the x axis.
     private Vector3 _movement;
 
@@ -97,7 +78,7 @@ public class PlayerControllerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //get axis raw is getting -1 or 1 with no smoothing.
+        //get axis raw is getting -1 or 1 with no smoothing. <Looks for left and right inputs and returns the direction.>
         _movement = new Vector3(Input.GetAxisRaw("Horizontal"), 0, 0);
         //get the raw jump input.
         _jumpInput = Input.GetAxisRaw("Jump") != 0;
@@ -114,25 +95,27 @@ public class PlayerControllerScript : MonoBehaviour
         //adds movement force.
         _rigidbody.AddForce(_movement * _acceleration * movementMagnifier * Time.fixedDeltaTime, ForceMode.VelocityChange);
 
-        //Clamp velocity to _maxSpeed.
+        //Clamp velocity to _maxSpeed. (we only do our x axis because we dont want to limit our falling speed. [so we dont fall slow])
+        //Clamping is assuring a value is within a certain range.
+
+        //store a copy of our velocity.
         Vector3 velocity = _rigidbody.velocity;
+        //store our new speed within a certain range (clamping)
         float newXspeed = Mathf.Clamp(_rigidbody.velocity.x, -_maxSpeed, _maxSpeed);
+        //assign the speed to our velocity
         velocity.x = newXspeed;
+        //give our velocity back to the rigidbody.
         _rigidbody.velocity = velocity;
 
-        //clamp velocity to maxSpeed.
+        //if jump is possible and we are trying to jump
         if (_jumpInput && _isTargetGrounded)
         {
+            //find the force of the jump
             float force = Mathf.Sqrt(_jumpHeight * -2f * Physics.gravity.y);
+            //add the force to our rigidbody.
             _rigidbody.AddForce(Vector3.up * force, ForceMode.Impulse);
         }
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        _isTargetGrounded = true;
-    }
-
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
@@ -141,5 +124,37 @@ public class PlayerControllerScript : MonoBehaviour
         Gizmos.DrawWireCube(transform.position + _groundCheck, _groundCheckExtense);
     }
 #endif
+
+
+
+
+
+
+    //NOTES:
+
+
+    //Attributes are written like this:
+    //[Attributes]
+
+    //sets a range with a slider in the inspector.
+    //[Range(min, max)]
+
+    //hides variable in inspector
+    //[HideInInspector]
+    //public float publicValue;
+
+    //shows private variable in inspector
+    //[SerializeField]
+
+    //Attributes can be stacked in the same square brackets.
+    //SerializesField and sets a minimum value that can be set.
+    //[SerializeField, Min(0)]
+    //adds a tool tip to the variable in the inspector.
+    //[Tooltip("Player Acceleration")]
+
+    //adds a space
+    //[Space]
+
+
 }
 
