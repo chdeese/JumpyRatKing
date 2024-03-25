@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof (PlayerControllerScript))]
@@ -10,12 +12,19 @@ public class PlayerTagBehaviorScript : MonoBehaviour
     //can be set in the inspector.
     private ParticleSystem _taggedParticles;
 
+    //stores a reference to the timer script we will use.
+    [SerializeField]
+    private TagTimerScript _timer;
+
     [SerializeField]
     //stores if we are tagged or not.
     private bool _isTagged;
 
     //stores if we can be tagged or not.
     private bool _canBeTagged;
+
+    [SerializeField]
+    private TMP_Text _resultField;
 
     //property for our tagged status
     public bool IsTagged
@@ -31,6 +40,10 @@ public class PlayerTagBehaviorScript : MonoBehaviour
 
         //set tagged to true.
         _isTagged = true;
+
+        //activates the timer because we are now tagged.
+        _timer.IsActive(true);
+
         //if getting the trail component succeeds, enable the trail.
         //out puts the trail component into the scope.
         if (TryGetComponent(out TrailRenderer trail)) trail.enabled = true;
@@ -62,6 +75,12 @@ public class PlayerTagBehaviorScript : MonoBehaviour
         //if this player isnt tagged, disable it.
         else
             trail.enabled = false;
+
+        if(_isTagged)
+        {
+            //start the timer for this player is active.
+            _timer.IsActive(true);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -82,6 +101,9 @@ public class PlayerTagBehaviorScript : MonoBehaviour
         _isTagged = false;
         //then say we can no longer be tagged
         _canBeTagged = false;
+
+        //stops counting down and resets timer.
+        _timer.IsActive(false);
 
         //"out" returns the variable out of the if condition and into the scope, the variable trail dies when it leaves the if statement.
         //the TryGetComponent still returns true or false.
@@ -113,5 +135,19 @@ public class PlayerTagBehaviorScript : MonoBehaviour
     private void ClearParticles()
     {
         _taggedParticles.Clear();
+    }
+
+    private void Update()
+    {
+        //if the timer is finished
+        if (_timer.IsFinished())
+        {
+            //changes UI text depending on who won.
+            if (_timer.IsPlayer() == 1)
+                _resultField.text = "Player 2 wins!";
+            else
+                _resultField.text = "Player 1 wins!";
+
+        }
     }
 }
