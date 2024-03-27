@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1976079821151747840}
   - component: {fileID: 1957413837242515527}
   m_Layer: 0
-  m_Name: CheeseBlock
+  m_Name: CheeseBlockPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
