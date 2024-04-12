@@ -50,7 +50,7 @@ public class FreeMovementPlayerControllerScript : MonoBehaviour
         float zAxis = Input.GetAxisRaw("Player1Depth");
 
 
-        UnityEngine.Debug.Log((xAxis + ", " + yAxis + ", " + zAxis + ", "));
+        UnityEngine.Debug.Log((xAxis + ", " + yAxis + ", " + zAxis));
 
         //sets the animation xAxis parameter.
         _animator.SetFloat("xAxis", xAxis); 
