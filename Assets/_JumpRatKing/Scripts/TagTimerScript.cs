@@ -39,7 +39,7 @@ public class TagTimerScript : MonoBehaviour
         if (!_timerActive)
         {
             //resets the timer.
-            _currentSeconds = _startSeconds;
+            ResetTimer();
 
             //changes the text to be the full duration.
             _text.text = ((int)_startSeconds).ToString();

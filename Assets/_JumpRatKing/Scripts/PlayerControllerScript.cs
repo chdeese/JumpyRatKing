@@ -38,12 +38,9 @@ public class PlayerControllerScript : MonoBehaviour
     //stores the direction of movement on the x axis.
     private Vector3 _movement;
 
-    //stores the player's rotation.
-    private Vector3 _rotation;
 
 
-
-    //using properties allows you to controll how this works.
+    //using properties allows you to control how this works.
     public float Speed
     {
         //=> is shorthand for {} but only on 1 line. (lambda syntax)
@@ -75,11 +72,6 @@ public class PlayerControllerScript : MonoBehaviour
         Debug.Assert(_rigidbody, "Rigidbody is null");
 
         //Assert is meant to never happen, throws an error if it does.
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
     }
 
     // Update is called once per frame

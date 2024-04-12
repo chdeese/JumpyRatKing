@@ -114,10 +114,6 @@ public class PlayerTagBehaviorScript : MonoBehaviour
 
     }
 
-    private void OnCollisionStay(Collision collision)
-    {
-        
-    }
     private void OnCollisionExit(Collision collision)
     {
         //Invoke waits until a time has passed, then calls a specific function.

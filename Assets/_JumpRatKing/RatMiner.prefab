@@ -139,8 +139,8 @@ MonoBehaviour:
   _isPlayerOne: 0
   _acceleration: 50
   _jumpHeight: 2
-  _groundCheck: {x: 0, y: 0, z: 0}
-  _groundCheckExtense: {x: 0, y: 0, z: 0}
+  _groundCheck: {x: 0, y: -0.81, z: 0}
+  _groundCheckExtense: {x: 1.68, y: 0.11, z: 0.72}
 --- !u!1001 &6827839422909944022
 PrefabInstance:
   m_ObjectHideFlags: 0
