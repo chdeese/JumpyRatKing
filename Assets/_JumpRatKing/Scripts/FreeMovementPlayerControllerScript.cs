@@ -19,23 +19,19 @@ public class FreeMovementPlayerControllerScript : MonoBehaviour
     //invokes CanJump() after this delay.
     private float _jumpDelay;
 
-    [Space]
-
     [SerializeField]
     [Tooltip("Delay before Player can attack again.")]
     //the amount of time before CanAttack() is invoked after attacking.
     private float _attackDelay;
 
+    [Space]
+
     [SerializeField]
     //stores a reference to our Player's weapon.
     private GameObject _meleeWeapon;
 
-
     //stores a reference to the animator that animates this.
     private Animator _animator;
-
-    //stores a reference to our rigidbody.
-    private Rigidbody _body;
 
     //stores true if this Player is already jumping.
     private bool _jumping;
@@ -62,9 +58,6 @@ public class FreeMovementPlayerControllerScript : MonoBehaviour
 
     void Awake()
     {
-        //get our body.
-        _body = GetComponent<Rigidbody>();
-
         //get our animator.
         _animator = GetComponent<Animator>();
     }
@@ -79,6 +72,7 @@ public class FreeMovementPlayerControllerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         //strafe
         float xAxis = Input.GetAxisRaw("Player1Horizontal");
         //jump
