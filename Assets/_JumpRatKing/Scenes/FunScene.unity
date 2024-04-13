@@ -2908,6 +2908,11 @@ PrefabInstance:
       objectReference: {fileID: 21712255}
     - target: {fileID: 4732876430369245918, guid: 4977ab7c9403e9445923d5ffb0cb1ca3,
         type: 3}
+      propertyPath: _jumpDelay
+      value: 1.277
+      objectReference: {fileID: 0}
+    - target: {fileID: 4732876430369245918, guid: 4977ab7c9403e9445923d5ffb0cb1ca3,
+        type: 3}
       propertyPath: _attackDelay
       value: 0.2
       objectReference: {fileID: 0}
@@ -2916,6 +2921,36 @@ PrefabInstance:
       propertyPath: _meleeWeapon
       value: 
       objectReference: {fileID: 490484283}
+    - target: {fileID: 4732876430369245918, guid: 4977ab7c9403e9445923d5ffb0cb1ca3,
+        type: 3}
+      propertyPath: _groundCheck.x
+      value: -0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4732876430369245918, guid: 4977ab7c9403e9445923d5ffb0cb1ca3,
+        type: 3}
+      propertyPath: _groundCheck.y
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4732876430369245918, guid: 4977ab7c9403e9445923d5ffb0cb1ca3,
+        type: 3}
+      propertyPath: _groundCheck.z
+      value: 0.11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4732876430369245918, guid: 4977ab7c9403e9445923d5ffb0cb1ca3,
+        type: 3}
+      propertyPath: _groundCheckExtense.x
+      value: 1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4732876430369245918, guid: 4977ab7c9403e9445923d5ffb0cb1ca3,
+        type: 3}
+      propertyPath: _groundCheckExtense.y
+      value: 0.11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4732876430369245918, guid: 4977ab7c9403e9445923d5ffb0cb1ca3,
+        type: 3}
+      propertyPath: _groundCheckExtense.z
+      value: 1.39
+      objectReference: {fileID: 0}
     - target: {fileID: 5870909295688373974, guid: 4977ab7c9403e9445923d5ffb0cb1ca3,
         type: 3}
       propertyPath: m_WarningMessage

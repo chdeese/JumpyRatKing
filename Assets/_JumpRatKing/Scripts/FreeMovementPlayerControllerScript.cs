@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using TMPro;
 using UnityEngine;
 
 public class FreeMovementPlayerControllerScript : MonoBehaviour
@@ -14,6 +15,13 @@ public class FreeMovementPlayerControllerScript : MonoBehaviour
     [Space]
 
     [SerializeField]
+    [Tooltip("Delay before Player can jump again.")]
+    //invokes CanJump() after this delay.
+    private float _jumpDelay;
+
+    [Space]
+
+    [SerializeField]
     [Tooltip("Delay before Player can attack again.")]
     //the amount of time before CanAttack() is invoked after attacking.
     private float _attackDelay;
@@ -21,7 +29,6 @@ public class FreeMovementPlayerControllerScript : MonoBehaviour
     [SerializeField]
     //stores a reference to our Player's weapon.
     private GameObject _meleeWeapon;
-
 
 
     //stores a reference to the animator that animates this.
@@ -45,6 +52,12 @@ public class FreeMovementPlayerControllerScript : MonoBehaviour
     private void CanAttack()
     {
         _canAttack = true;
+    }
+
+    //changes the _jumping variable to false.
+    private void CanJump()
+    {
+        _jumping = false;
     }
 
     void Awake()
@@ -88,23 +101,19 @@ public class FreeMovementPlayerControllerScript : MonoBehaviour
             //stop attacking.
             StopAttacking();
 
-        //if we are already jumping.
-        if(_jumping)
-        {
-            //prevent jump input from reaching animation controller.
-            yAxis = 0f;
-        }
-
-        //if we are trying to jump.
+        //if we are trying to jump and we are not jumping.
         if(yAxis > 0.1f && !_jumping)
         { 
             //set jumping to true.
             _jumping = true;
-        }
 
-        //if we are not currently jumping or falling.
-        if(_body.velocity.y < 0.1f && _body.velocity.y > -0.1f)
-            _jumping = false;
+            //calls CanJump() after a set delay.
+            Invoke("CanJump", _jumpDelay);
+        }
+        else
+            //if we are already jumping,
+            //prevents jump input from reaching animation controller.
+            yAxis = 0f;
 
         //sets the animation xAxis parameter.
         _animator.SetFloat("xAxis", xAxis); 

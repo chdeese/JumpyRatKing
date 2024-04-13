@@ -149,6 +149,7 @@ public class PlayerControllerScript : MonoBehaviour
     {
         //selects the color of our gizmo.
         Gizmos.color = Color.green;
+
         //draws a wire cube that indicates where our ground collision is.
         Gizmos.DrawWireCube(transform.position + _groundCheck, _groundCheckExtense);
     }
